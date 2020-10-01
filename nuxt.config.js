@@ -28,6 +28,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    {src: '@/plugins/axios.js'}
   ],
   /*
   ** Nuxt.js dev-modules
@@ -44,12 +45,14 @@ export default {
     '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
+    '@nuxtjs/auth',
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    baseURL: 'http://localhost:3000/'
   },
   /*
   ** Build configuration
@@ -59,6 +62,27 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+    }
+  },
+  server: {
+    port: 8000,
+  },
+  router: {
+    middleware: ['auth']
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/auth/sign_in', method: 'post' },
+          logout: { url: '/auth/sign_out', method: 'delete' },
+          user: { url: '/users/show', method: 'get', propertyName: 'data' }
+        },
+        // tokenRequired: true,
+        // tokenType: 'bearer',
+        // globalToken: true,
+        // autoFetchUser: true
+      }
     }
   }
 }
